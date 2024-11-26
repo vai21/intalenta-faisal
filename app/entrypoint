@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# if any of the commands in your code fails for any reason, the entire script fails
+set -o errexit
+# exits if any of your variables is not set
+set -o nounset
+
+if [ "$DATABASE" = "postgres" ]
+then
+    echo "Waiting for postgres..."
+
+    while ! nc -z $SQL_HOST $SQL_PORT; do
+      sleep 0.1
+    done
+
+    echo "PostgreSQL started"
+fi
+
+# python manage.py flush --no-input
+# python manage.py migrate
+
+exec "$@"

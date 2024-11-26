@@ -1,0 +1,75 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./app/Dockerfile
+    image: django_celery
+    command: /start
+    volumes:
+      - ./app:/app
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db
+      - redis
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=customerfeedbackanalysis
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=customerfeedbackanalysis_dev
+    ports:
+      - 5432:5432
+  redis:
+    image: redis:7-alpine
+    ports:
+      - 6379:6379
+  
+  celery_worker:
+    build:
+      context: .
+      dockerfile: ./app/Dockerfile
+    image: django_celery
+    command: /start-celeryworker
+    volumes:
+      - ./app:/app
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - redis
+      - db
+  celery_beat:
+    build:
+      context: .
+      dockerfile: ./app/Dockerfile
+    image: django_celery
+    command: /start-celerybeat
+    volumes:
+      - ./app:/app
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - redis
+      - db
+  flower:
+    build:
+      context: .
+      dockerfile: ./app/Dockerfile
+    image: django_celery
+    command: /start-flower
+    volumes:
+      - ./app:/app
+    env_file:
+      - ./.env.dev
+    ports:
+      - 8001:5555
+    depends_on:
+      - redis
+      - db
+
+volumes:
+  postgres_data:
