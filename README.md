@@ -25,7 +25,7 @@ docker-compose up -d --build
 Docker compose will install and run all the dependencies like redis, django web, postgresql, celery, flower.
 Change the AI21 secret key with your secret key for sentiment analysis.
 ## Documentation
-[Documentation](https://spectacular-rest-ab6.notion.site/Intalenta-Test-14a17c6f2af280eb946ce0f349024955)
+[Notion.so](https://spectacular-rest-ab6.notion.site/Intalenta-Test-14a17c6f2af280eb946ce0f349024955)
 
 ## License
 
